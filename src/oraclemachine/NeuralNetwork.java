@@ -184,7 +184,14 @@ public class NeuralNetwork {
         return layers;
     }
     
-    
+    private static String generateRandomCode(Random r, int size){
+        String[] code;
+        code = new String[size];
+        for(int i=0; i<1024; i++){
+            code[i] = String.valueOf(r.nextInt(2));
+        }
+        return String.join("", code);
+    }
     
     
     
@@ -193,67 +200,112 @@ public class NeuralNetwork {
         
         System.out.println("Entra el valor de la semilla: ");
         Random r = new Random(Integer.parseInt(scanner.next()));
-        System.out.println("Introduce el numero de tiempos observados: (sugerencia 4) ");
-        int inputLayerSize = Integer.parseInt(scanner.next());
         System.out.println("Introduce el tamanio de la capa oculta: ");
         int hiddenLayerSize = Integer.parseInt(scanner.next());
         System.out.println("Introduce el numero de epocas ");
         int numEpochs = Integer.parseInt(scanner.next());
         System.out.println("Introduce la tasa de aprendizaje: ");
         double eta = Double.parseDouble(scanner.next());
-        
-        
-        int numHiddenLayers = 1;
-        int[] layerSizes = new int[3];
-        layerSizes[0] = inputLayerSize;
-        layerSizes[1] = hiddenLayerSize;
-        layerSizes[2] = 1;
-        
-        
-        // Simulate observations
-        int numObservations = 100; // This should be given by the Turing Machine.
-        Matrix[] layers  = setWeights(numHiddenLayers, layerSizes);
-        //double[] writesHistory = randomWrites(numObservations, r);
-        //double[][] observations = createObservations (numObservations, inputLayerSize, r);
-       
-        double[] writesHistory = new double[] {0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1};
-        double[][] observations = new double[50][3];
-        observations[0] = new double[] {1, 1, 0 };
-        observations[1] = new double[] {1, 0, 1};
-        observations[2] = new double[] {0, 1, 0};
-        observations[3] = new double[] {1, 1, 0 };
-        observations[4] = new double[] {1, 0, 1};
-        observations[5] = new double[] {0, 1, 0};
-        observations[6] = new double[] {1, 1, 0 };
-        observations[7] = new double[] {1, 0, 1};
-        observations[8] = new double[] {0, 1, 0};
-        observations[9] = new double[] {1, 1, 0 };
-        observations[10] = new double[] {1, 0, 1};
-        observations[11] = new double[] {0, 1, 0};
-        observations[12] = new double[] {1, 1, 0 };
-        observations[13] = new double[] {1, 0, 1};
-        observations[14] = new double[] {0, 1, 0};
-        observations[15] = new double[] {1, 1, 0 };
-        observations[16] = new double[] {1, 0, 1};
-        observations[17] = new double[] {0, 1, 0};
-        observations[18] = new double[] {1, 1, 0 };
-        observations[19] = new double[] {1, 0, 1};
-        observations[20] = new double[] {0, 1, 0};
-        
-        // Run Neural Net
-        System.out.println("Inicia entrenamiento");
+        System.out.println("¿Correr test de backpropagation? (1=y/0=n)");
+        int testBackProp = Integer.parseInt(scanner.next());
+        if (testBackProp==1){
+            int numHiddenLayers = 1;
+            int[] layerSizes = new int[3];
+            layerSizes[0] = 3;
+            layerSizes[1] = hiddenLayerSize;
+            layerSizes[2] = 1;
+            // Simulate observations
+            int numObservations = 100; // This should be given by the Turing Machine.
+            Matrix[] layers  = setWeights(numHiddenLayers, layerSizes);
+            double[] writesHistory = new double[] {0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1};
+            double[][] observations = new double[21][3];
+            observations[0] = new double[] {1, 1, 0 };
+            observations[1] = new double[] {1, 0, 1};
+            observations[2] = new double[] {0, 1, 0};
+            observations[3] = new double[] {1, 1, 0 };
+            observations[4] = new double[] {1, 0, 1};
+            observations[5] = new double[] {0, 1, 0};
+            observations[6] = new double[] {1, 1, 0 };
+            observations[7] = new double[] {1, 0, 1};
+            observations[8] = new double[] {0, 1, 0};
+            observations[9] = new double[] {1, 1, 0 };
+            observations[10] = new double[] {1, 0, 1};
+            observations[11] = new double[] {0, 1, 0};
+            observations[12] = new double[] {1, 1, 0 };
+            observations[13] = new double[] {1, 0, 1};
+            observations[14] = new double[] {0, 1, 0};
+            observations[15] = new double[] {1, 1, 0 };
+            observations[16] = new double[] {1, 0, 1};
+            observations[17] = new double[] {0, 1, 0};
+            observations[18] = new double[] {1, 1, 0 };
+            observations[19] = new double[] {1, 0, 1};
+            observations[20] = new double[] {0, 1, 0};
 
-        Matrix[] outputLayers = trainNN(observations, writesHistory, layers,
-                                        eta, numHiddenLayers, layerSizes, 
-                                        r, numEpochs);
-        
-        for(int k = 0; k < 20; k++){ 
-            double prediction = runNetwork(outputLayers,observations[k]);
-            System.out.println(Math.round(prediction)==writesHistory[k]);
+            // Run Neural Net
+            System.out.println("Inicia entrenamiento");
+
+            Matrix[] outputLayers = trainNN(observations, writesHistory, layers,
+                                            eta, numHiddenLayers, layerSizes, 
+                                            r, numEpochs);
+
+            for(int k = 0; k < 20; k++){ 
+                double prediction = runNetwork(outputLayers,observations[k]);
+                System.out.println(Math.round(prediction)==writesHistory[k]);
+            }
+        }else{
+            System.out.println("Introduce el numero de tiempos observados: (sugerencia 4) ");
+            int inputLayerSize = Integer.parseInt(scanner.next());
+            System.out.println("Longitud de la cinta(integer > 0):");
+            int tapeSize = Integer.parseInt(scanner.next());
+            System.out.println("Maximo numero de transiciones para la maquina de Turing (integer > 0):");
+            int tmMaxIters = Integer.parseInt(scanner.next());
+
+
+
+            //Genera un código aleatorio+
+            String tmCode = generateRandomCode(r, 1024);
+            System.out.println("code");
+            System.out.println(tmCode);
+            TuringMachine tm = new TuringMachine();
+            String writeSequence = tm.simulate(tmCode,tapeSize, tmMaxIters, true);
+            System.out.println(writeSequence);
+            System.out.println("writeSequence");
+            char[] wsArray = writeSequence.toCharArray();
+            int numHiddenLayers = 1;
+            int[] layerSizes = new int[3];
+            layerSizes[0] = inputLayerSize;
+            layerSizes[1] = hiddenLayerSize;
+            layerSizes[2] = 1;
+            // Simulate observations
+            int numObservations = wsArray.length-inputLayerSize;
+            Matrix[] layers  = setWeights(numHiddenLayers, layerSizes);
+            double[] writesHistory = new double[numObservations];
+            
+            double[][] observations = new double[numObservations][inputLayerSize];
+            for(int k = 0; k < numObservations; k++){
+                for(int i = 0; i < inputLayerSize; i++){ 
+                    observations[k][i] = Double.parseDouble(Character.toString(wsArray[k+i]));
+                }
+                writesHistory[inputLayerSize] = Double.parseDouble(Character.toString(wsArray[k+inputLayerSize-1]));
+                
+            }
+            System.out.println("Inicia entrenamiento");
+
+            Matrix[] outputLayers = trainNN(observations, writesHistory, layers,
+                                            eta, numHiddenLayers, layerSizes, 
+                                            r, numEpochs);
+            String omCode = generateRandomCode(r, 2048);
+            System.out.println("Codigo para maquina oraculo");
+            System.out.println(omCode);
+            OracleMachine om = new OracleMachine(outputLayers);
+            String usedStates = om.simulate(omCode,tapeSize, tmMaxIters, true);
+            System.out.println("Estados usados por la maquina oraculo");
+            System.out.println(usedStates);
+            
         }
-        
-       
+            
     }
+
     
 }
 
